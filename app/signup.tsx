@@ -263,7 +263,7 @@ export default function SignUpScreen() {
                   <ChevronDown size={18} color={Colors.neutral.gray} />
                 </TouchableOpacity>
                 {showServiceTypes && (
-                  <View style={styles.dropdown}>
+                  <ScrollView style={styles.dropdown} nestedScrollEnabled>
                     {serviceTypes.map((type) => (
                       <TouchableOpacity
                         key={type}
@@ -279,7 +279,7 @@ export default function SignUpScreen() {
                         <Text style={styles.dropdownText}>{type}</Text>
                       </TouchableOpacity>
                     ))}
-                  </View>
+                  </ScrollView>
                 )}
               </View>
 
@@ -373,7 +373,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     gap: 8,
-    position: 'relative',
   },
   label: {
     fontSize: 12,
@@ -428,18 +427,12 @@ const styles = StyleSheet.create({
     fontWeight: '600' as const,
   },
   dropdown: {
-    position: 'absolute',
-    top: '100%',
-    left: 0,
-    right: 0,
     backgroundColor: Colors.neutral.white,
     borderWidth: 1,
     borderColor: Colors.neutral.lightGray,
     borderRadius: 8,
     marginTop: 4,
-    maxHeight: 200,
-    zIndex: 1000,
-    elevation: 5,
+    maxHeight: 160,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -447,6 +440,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    elevation: 5,
   },
   dropdownItem: {
     paddingVertical: 12,
@@ -454,9 +448,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.neutral.lightGray,
   },
-  'dropdownItem:last-child': {
-    borderBottomWidth: 0,
-  },
+
   dropdownText: {
     fontSize: 14,
     color: Colors.neutral.black,
