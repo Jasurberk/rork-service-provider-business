@@ -11,6 +11,7 @@ import { translations } from '@/constants/translations';
 import { useAppointmentsStore } from '@/hooks/useAppointmentsStore';
 import { useLanguageStore } from '@/hooks/useLanguageStore';
 import { Appointment } from '@/types';
+import { getTranslatedText } from '@/lib/translation-utils';
 
 export default function CalendarScreen() {
   const insets = useSafeAreaInsets();
@@ -156,10 +157,10 @@ export default function CalendarScreen() {
                     </View>
                     <View style={styles.appointmentInfo}>
                       <Text style={styles.appointmentName} numberOfLines={1}>
-                        {appointment.clientName}
+                        {getTranslatedText(appointment.clientName, language)}
                       </Text>
                       <Text style={styles.appointmentService} numberOfLines={1}>
-                        {appointment.serviceName}
+                        {getTranslatedText(appointment.serviceName, language)}
                       </Text>
                     </View>
                   </View>

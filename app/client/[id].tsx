@@ -9,9 +9,12 @@ import Colors from '@/constants/colors';
 import { useAppointmentsStore } from '@/hooks/useAppointmentsStore';
 import { useClientsStore } from '@/hooks/useClientsStore';
 import { Appointment, Client } from '@/types';
+import { useLanguageStore } from '@/hooks/useLanguageStore';
+import { getTranslatedText } from '@/lib/translation-utils';
 
 export default function ClientDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { language } = useLanguageStore();
   const { clients, deleteClient } = useClientsStore();
   const { getAppointmentsByClient } = useAppointmentsStore();
   const [client, setClient] = useState<Client | null>(null);
@@ -73,7 +76,7 @@ export default function ClientDetailsScreen() {
     <>
       <Stack.Screen 
         options={{
-          title: client.name,
+          title: getTranslatedText(client.name, language),
           headerRight: () => (
             <View style={styles.headerButtons}>
               <TouchableOpacity onPress={handleEditClient} style={styles.headerButton}>
@@ -91,11 +94,11 @@ export default function ClientDetailsScreen() {
           <View style={styles.clientHeader}>
             <View style={styles.clientInitials}>
               <Text style={styles.initialsText}>
-                {client.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                {getTranslatedText(client.name, language).split(' ').map(n => n[0]).join('').toUpperCase()}
               </Text>
             </View>
             <View style={styles.clientInfo}>
-              <Text style={styles.clientName}>{client.name}</Text>
+              <Text style={styles.clientName}>{getTranslatedText(client.name, language)}</Text>
               {client.lastVisit && (
                 <Text style={styles.lastVisit}>Last visit: {client.lastVisit}</Text>
               )}
@@ -124,7 +127,7 @@ export default function ClientDetailsScreen() {
                   <MessageSquare size={20} color={Colors.primary.main} />
                   <Text style={styles.sectionTitle}>Notes</Text>
                 </View>
-                <Text style={styles.notesText}>{client.notes}</Text>
+                <Text style={styles.notesText}>{getTranslatedText(client.notes, language)}</Text>
               </View>
             </>
           )}

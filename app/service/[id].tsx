@@ -6,9 +6,12 @@ import { Stack, router, useLocalSearchParams } from 'expo-router';
 import Colors from '@/constants/colors';
 import { useServicesStore } from '@/hooks/useServicesStore';
 import { Service } from '@/types';
+import { useLanguageStore } from '@/hooks/useLanguageStore';
+import { getTranslatedText } from '@/lib/translation-utils';
 
 export default function ServiceDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { language } = useLanguageStore();
   const { services, deleteService } = useServicesStore();
   const [service, setService] = useState<Service | null>(null);
 
@@ -62,7 +65,7 @@ export default function ServiceDetailsScreen() {
     <>
       <Stack.Screen 
         options={{
-          title: service.name,
+          title: getTranslatedText(service.name, language),
           headerRight: () => (
             <View style={styles.headerButtons}>
               <TouchableOpacity onPress={handleEditService} style={styles.headerButton}>
@@ -78,14 +81,14 @@ export default function ServiceDetailsScreen() {
       <View style={styles.container}>
         <View style={styles.card}>
           <View style={styles.header}>
-            <Text style={styles.name}>{service.name}</Text>
+            <Text style={styles.name}>{getTranslatedText(service.name, language)}</Text>
             <View style={styles.categoryBadge}>
               <Tag size={16} color={Colors.neutral.white} />
               <Text style={styles.categoryText}>{service.category}</Text>
             </View>
           </View>
 
-          <Text style={styles.description}>{service.description}</Text>
+          <Text style={styles.description}>{getTranslatedText(service.description, language)}</Text>
 
           <View style={styles.detailsContainer}>
             <View style={styles.detailCard}>

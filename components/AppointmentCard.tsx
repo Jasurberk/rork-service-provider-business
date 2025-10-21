@@ -4,6 +4,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Colors from '@/constants/colors';
 import { Appointment } from '@/types';
+import { useLanguageStore } from '@/hooks/useLanguageStore';
+import { getTranslatedText } from '@/lib/translation-utils';
 
 interface AppointmentCardProps {
   appointment: Appointment;
@@ -11,6 +13,8 @@ interface AppointmentCardProps {
 }
 
 export default function AppointmentCard({ appointment, onPress }: AppointmentCardProps) {
+  const { language } = useLanguageStore();
+  
   const getStatusColor = (status: Appointment['status']) => {
     return Colors.appointment[status];
   };
@@ -65,7 +69,7 @@ export default function AppointmentCard({ appointment, onPress }: AppointmentCar
       <View style={styles.content}>
         <View style={styles.infoRow}>
           <User size={16} color={Colors.neutral.darkGray} />
-          <Text style={styles.infoText}>{appointment.clientName}</Text>
+          <Text style={styles.infoText}>{getTranslatedText(appointment.clientName, language)}</Text>
         </View>
         
         <View style={styles.infoRow}>
@@ -75,7 +79,7 @@ export default function AppointmentCard({ appointment, onPress }: AppointmentCar
         
         <View style={styles.infoRow}>
           <Clock size={16} color={Colors.neutral.darkGray} />
-          <Text style={styles.infoText}>{appointment.serviceName}</Text>
+          <Text style={styles.infoText}>{getTranslatedText(appointment.serviceName, language)}</Text>
         </View>
         
         <View style={styles.infoRow}>
@@ -89,7 +93,7 @@ export default function AppointmentCard({ appointment, onPress }: AppointmentCar
           <View style={styles.infoRow}>
             <MessageSquare size={16} color={Colors.neutral.darkGray} />
             <Text style={styles.infoText} numberOfLines={1} ellipsizeMode="tail">
-              {appointment.notes}
+              {getTranslatedText(appointment.notes, language)}
             </Text>
           </View>
         )}

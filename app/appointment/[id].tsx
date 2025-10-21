@@ -8,9 +8,12 @@ import { useAppointmentsStore } from '@/hooks/useAppointmentsStore';
 import { useClientsStore } from '@/hooks/useClientsStore';
 import { useServicesStore } from '@/hooks/useServicesStore';
 import { Appointment } from '@/types';
+import { useLanguageStore } from '@/hooks/useLanguageStore';
+import { getTranslatedText } from '@/lib/translation-utils';
 
 export default function AppointmentDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { language } = useLanguageStore();
   const { appointments, updateAppointment, deleteAppointment } = useAppointmentsStore();
   const { getClientById } = useClientsStore();
   const { getServiceById } = useServicesStore();
@@ -143,7 +146,7 @@ export default function AppointmentDetailsScreen() {
             <View style={styles.infoRow}>
               <User size={20} color={Colors.primary.main} />
               <Text style={styles.infoLabel}>Name:</Text>
-              <Text style={styles.infoValue}>{client?.name || appointment.clientName}</Text>
+              <Text style={styles.infoValue}>{client ? getTranslatedText(client.name, language) : getTranslatedText(appointment.clientName, language)}</Text>
             </View>
             
             {client && (
@@ -165,11 +168,11 @@ export default function AppointmentDetailsScreen() {
 
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Service</Text>
-            <Text style={styles.serviceName}>{service?.name || appointment.serviceName}</Text>
+            <Text style={styles.serviceName}>{service ? getTranslatedText(service.name, language) : getTranslatedText(appointment.serviceName, language)}</Text>
             
             {service && (
               <>
-                <Text style={styles.serviceDescription}>{service.description}</Text>
+                <Text style={styles.serviceDescription}>{getTranslatedText(service.description, language)}</Text>
                 
                 <View style={styles.serviceDetails}>
                   <View style={styles.serviceDetail}>
@@ -194,7 +197,7 @@ export default function AppointmentDetailsScreen() {
                   <MessageSquare size={20} color={Colors.primary.main} />
                   <Text style={styles.sectionTitle}>Notes</Text>
                 </View>
-                <Text style={styles.notes}>{appointment.notes}</Text>
+                <Text style={styles.notes}>{getTranslatedText(appointment.notes, language)}</Text>
               </View>
             </>
           )}

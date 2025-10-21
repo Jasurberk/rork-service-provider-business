@@ -18,8 +18,11 @@ import { useAppointmentsStore } from '@/hooks/useAppointmentsStore';
 import { useClientsStore } from '@/hooks/useClientsStore';
 import { useServicesStore } from '@/hooks/useServicesStore';
 import { Appointment, Client, Service } from '@/types';
+import { useLanguageStore } from '@/hooks/useLanguageStore';
+import { getTranslatedText } from '@/lib/translation-utils';
 
 export default function NewAppointmentScreen() {
+  const { language } = useLanguageStore();
   const { addAppointment } = useAppointmentsStore();
   const { clients } = useClientsStore();
   const { services } = useServicesStore();
@@ -165,7 +168,7 @@ export default function NewAppointmentScreen() {
                     setShowClientModal(false);
                   }}
                 >
-                  <Text style={styles.clientName}>{client.name}</Text>
+                  <Text style={styles.clientName}>{getTranslatedText(client.name, language)}</Text>
                   <Text style={styles.clientPhone}>{client.phone}</Text>
                 </TouchableOpacity>
               ))
@@ -262,7 +265,7 @@ export default function NewAppointmentScreen() {
                 }}
               >
                 <View style={styles.serviceInfo}>
-                  <Text style={styles.serviceName}>{service.name}</Text>
+                  <Text style={styles.serviceName}>{getTranslatedText(service.name, language)}</Text>
                   <Text style={styles.serviceDetails}>
                     {service.duration} min • ${service.price}
                   </Text>
@@ -371,7 +374,7 @@ export default function NewAppointmentScreen() {
             <View style={styles.selectButtonContent}>
               <Text style={styles.selectButtonLabel}>Client</Text>
               <Text style={styles.selectButtonValue}>
-                {selectedClient ? selectedClient.name : 'Select client'}
+                {selectedClient ? getTranslatedText(selectedClient.name, language) : 'Select client'}
               </Text>
             </View>
             <ChevronDown size={20} color={Colors.neutral.gray} />
@@ -391,7 +394,7 @@ export default function NewAppointmentScreen() {
             <View style={styles.selectButtonContent}>
               <Text style={styles.selectButtonLabel}>Service</Text>
               <Text style={styles.selectButtonValue}>
-                {selectedService ? selectedService.name : 'Select service'}
+                {selectedService ? getTranslatedText(selectedService.name, language) : 'Select service'}
               </Text>
               {selectedService && (
                 <Text style={styles.serviceSubtext}>
