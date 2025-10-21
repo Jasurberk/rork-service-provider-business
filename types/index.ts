@@ -1,9 +1,16 @@
+export type TranslatedText = {
+  en?: string;
+  ru?: string;
+  uz?: string;
+  original?: string;
+};
+
 export type Client = {
   id: string;
-  name: string;
+  name: string | TranslatedText;
   phone: string;
   email: string;
-  notes?: string;
+  notes?: string | TranslatedText;
   lastVisit?: string;
   upcomingAppointment?: string;
   avatar?: string;
@@ -13,9 +20,9 @@ export type Client = {
 
 export type Service = {
   id: string;
-  name: string;
-  description: string;
-  duration: number; // in minutes
+  name: string | TranslatedText;
+  description: string | TranslatedText;
+  duration: number;
   price: number;
   category: string;
 };
@@ -53,7 +60,7 @@ export type AppNotification = {
 export type PortfolioItem = {
   id: string;
   imageUrl: string;
-  description: string;
+  description: string | TranslatedText;
   serviceCategory: string;
   date: string;
 };
@@ -69,8 +76,8 @@ export type BusinessProfileExceptions = {
 
 export type BusinessProfile = {
   id: string;
-  name: string;
-  address: string;
+  name: string | TranslatedText;
+  address: string | TranslatedText;
   phone: string;
   email: string;
   workingHours: {
@@ -81,7 +88,7 @@ export type BusinessProfile = {
     };
   };
   exceptions?: BusinessProfileExceptions;
-  bio: string;
+  bio: string | TranslatedText;
   profileImage?: string;
   coverPhotos?: string[];
   mainCoverPhotoIndex?: number;

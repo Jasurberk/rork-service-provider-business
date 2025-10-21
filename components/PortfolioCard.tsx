@@ -4,6 +4,8 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Colors from '@/constants/colors';
 import { PortfolioItem } from '@/types';
+import { useLanguageStore } from '@/hooks/useLanguageStore';
+import { getTranslatedText } from '@/lib/translation-utils';
 
 interface PortfolioCardProps {
   item: PortfolioItem;
@@ -11,6 +13,8 @@ interface PortfolioCardProps {
 }
 
 export default function PortfolioCard({ item, onPress }: PortfolioCardProps) {
+  const { language } = useLanguageStore();
+  
   return (
     <TouchableOpacity 
       style={styles.container} 
@@ -25,7 +29,7 @@ export default function PortfolioCard({ item, onPress }: PortfolioCardProps) {
       
       <View style={styles.content}>
         <Text style={styles.description} numberOfLines={2} ellipsizeMode="tail">
-          {item.description}
+          {getTranslatedText(item.description, language)}
         </Text>
         
         <View style={styles.footer}>

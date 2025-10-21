@@ -4,6 +4,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Colors from '@/constants/colors';
 import { Client } from '@/types';
+import { useLanguageStore } from '@/hooks/useLanguageStore';
+import { getTranslatedText } from '@/lib/translation-utils';
 
 interface ClientCardProps {
   client: Client;
@@ -11,6 +13,8 @@ interface ClientCardProps {
 }
 
 export default function ClientCard({ client, onPress }: ClientCardProps) {
+  const { language } = useLanguageStore();
+  
   return (
     <TouchableOpacity 
       style={styles.container} 
@@ -18,7 +22,7 @@ export default function ClientCard({ client, onPress }: ClientCardProps) {
       activeOpacity={0.7}
     >
       <View style={styles.header}>
-        <Text style={styles.name}>{client.name}</Text>
+        <Text style={styles.name}>{getTranslatedText(client.name, language)}</Text>
         {client.upcomingAppointment && (
           <View style={styles.upcomingBadge}>
             <Text style={styles.upcomingText}>Upcoming</Text>
@@ -48,7 +52,7 @@ export default function ClientCard({ client, onPress }: ClientCardProps) {
           <View style={styles.infoRow}>
             <MessageSquare size={16} color={Colors.neutral.darkGray} />
             <Text style={styles.infoText} numberOfLines={1} ellipsizeMode="tail">
-              {client.notes}
+              {getTranslatedText(client.notes, language)}
             </Text>
           </View>
         )}

@@ -4,6 +4,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Colors from '@/constants/colors';
 import { Service } from '@/types';
+import { useLanguageStore } from '@/hooks/useLanguageStore';
+import { getTranslatedText } from '@/lib/translation-utils';
 
 interface ServiceCardProps {
   service: Service;
@@ -11,6 +13,8 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ service, onPress }: ServiceCardProps) {
+  const { language } = useLanguageStore();
+  
   return (
     <TouchableOpacity 
       style={styles.container} 
@@ -18,14 +22,14 @@ export default function ServiceCard({ service, onPress }: ServiceCardProps) {
       activeOpacity={0.7}
     >
       <View style={styles.header}>
-        <Text style={styles.name}>{service.name}</Text>
+        <Text style={styles.name}>{getTranslatedText(service.name, language)}</Text>
         <View style={styles.categoryBadge}>
           <Text style={styles.categoryText}>{service.category}</Text>
         </View>
       </View>
       
       <Text style={styles.description} numberOfLines={2} ellipsizeMode="tail">
-        {service.description}
+        {getTranslatedText(service.description, language)}
       </Text>
       
       <View style={styles.footer}>

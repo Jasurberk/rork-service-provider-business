@@ -44,6 +44,7 @@ import { translations } from '@/constants/translations';
 import { useAuth } from '@/hooks/useAuthStore';
 import { useBusinessStore } from '@/hooks/useBusinessStore';
 import { useLanguageStore } from '@/hooks/useLanguageStore';
+import { getTranslatedText } from '@/lib/translation-utils';
 
 import { mockReviews } from '@/mocks/reviews';
 
@@ -245,7 +246,7 @@ export default function ProfileScreen() {
     <View style={styles.section}>
       <View style={styles.detailsContainer}>
         <View style={styles.businessNameRow}>
-          <Text style={styles.businessName}>{profile.name}</Text>
+          <Text style={styles.businessName}>{getTranslatedText(profile.name, language)}</Text>
           <TouchableOpacity 
             style={styles.editBusinessIconButton}
             onPress={() => handleEditSection('Business Details')}
@@ -261,7 +262,7 @@ export default function ProfileScreen() {
         
         <View style={styles.detailRow}>
           <MapPin size={16} color={Colors.primary.main} />
-          <Text style={styles.detailText}>{profile.address}</Text>
+          <Text style={styles.detailText}>{getTranslatedText(profile.address, language)}</Text>
         </View>
         
         <View style={styles.detailRow}>
@@ -276,7 +277,7 @@ export default function ProfileScreen() {
         
         {profile.bio && (
           <View style={styles.bioContainer}>
-            <Text style={styles.bioText}>{profile.bio}</Text>
+            <Text style={styles.bioText}>{getTranslatedText(profile.bio, language)}</Text>
           </View>
         )}
       </View>
