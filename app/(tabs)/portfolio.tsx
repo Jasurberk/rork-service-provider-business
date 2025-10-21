@@ -2,6 +2,7 @@ import { ArrowUpDown, Image as ImageIcon, Plus, Search, Settings as SettingsIcon
 import React, { useEffect, useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ClientCard from '@/components/ClientCard';
 import EmptyState from '@/components/EmptyState';
@@ -19,6 +20,7 @@ type TabType = 'clients' | 'services' | 'portfolio';
 type ClientSortType = 'name' | 'lastVisit' | 'frequency';
 
 export default function PortfolioScreen() {
+  const insets = useSafeAreaInsets();
   const { language } = useLanguageStore();
   const t = translations[language];
   
@@ -373,7 +375,7 @@ export default function PortfolioScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.tabsContainer}>
+      <View style={[styles.tabsContainer, { paddingTop: insets.top }]}>
         <TouchableOpacity
           testID="tab-services"
           style={[styles.tab, activeTab === 'services' && styles.activeTab]}

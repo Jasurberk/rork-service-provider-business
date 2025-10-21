@@ -2,6 +2,7 @@ import { Calendar, ChevronLeft, ChevronRight, List, Plus } from 'lucide-react-na
 import React, { useEffect, useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AppointmentCard from '@/components/AppointmentCard';
 import EmptyState from '@/components/EmptyState';
@@ -12,6 +13,7 @@ import { useLanguageStore } from '@/hooks/useLanguageStore';
 import { Appointment } from '@/types';
 
 export default function CalendarScreen() {
+  const insets = useSafeAreaInsets();
   const { language } = useLanguageStore();
   const t = translations[language];
   const { getAppointmentsByDate } = useAppointmentsStore();
@@ -185,7 +187,7 @@ export default function CalendarScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.calendarHeader}>
+      <View style={[styles.calendarHeader, { paddingTop: insets.top + 16 }]}>
         <Text style={styles.monthYear}>{formatMonthYear(selectedDate)}</Text>
         <View style={styles.navigationButtons}>
           <TouchableOpacity onPress={navigateToPreviousWeek} style={styles.navButton}>
@@ -291,7 +293,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
     backgroundColor: Colors.primary.main,
     borderBottomWidth: 1,
     borderBottomColor: Colors.neutral.lightGray,
