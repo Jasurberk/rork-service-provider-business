@@ -4,12 +4,13 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { mockAppointments } from '@/mocks/appointments';
 import { Appointment } from '@/types';
+import { translateText } from '@/lib/translation-utils';
 
 interface AppointmentsState {
   appointments: Appointment[];
   isLoading: boolean;
-  addAppointment: (appointment: Appointment) => void;
-  updateAppointment: (id: string, updatedAppointment: Partial<Appointment>) => void;
+  addAppointment: (appointment: Appointment, autoTranslate?: boolean) => Promise<void>;
+  updateAppointment: (id: string, updatedAppointment: Partial<Appointment>, autoTranslate?: boolean) => Promise<void>;
   deleteAppointment: (id: string) => void;
   getAppointmentsByDate: (date: string) => Appointment[];
   getAppointmentsByClient: (clientId: string) => Appointment[];
@@ -21,10 +22,29 @@ export const useAppointmentsStore = create<AppointmentsState>()(
     (set, get) => ({
       appointments: mockAppointments,
       isLoading: false,
-      addAppointment: (appointment) => {
+      addAppointment: async (appointment, autoTranslate = true) => {
+        let finalAppointment = appointment;
+        
+        if (autoTranslate) {
+          const translations: Partial<Appointment> = {};
+          
+          if (typeof appointment.clientName === 'string') {
+            translations.clientName = await translateText(appointment.clientName);
+          }
+          
+          if (typeof appointment.serviceName === 'string') {
+            translations.serviceName = await translateText(appointment.serviceName);
+          }
+          
+          if (appointment.notes && typeof appointment.notes === 'string') {
+            translations.notes = await translateText(appointment.notes);
+          }
+          
+          finalAppointment = { ...appointment, ...translations };
+        }
         // Update state
         set((state) => ({
-          appointments: [...state.appointments, appointment],
+          appointments: [...state.appointments, finalAppointment],
         }));
         // Notify
         try {
@@ -33,21 +53,40 @@ export const useAppointmentsStore = create<AppointmentsState>()(
           notifications.addNotification({
             type: 'new_appointment',
             title: 'New Appointment Booked',
-            message: `${appointment.clientName} booked ${appointment.serviceName} on ${appointment.date} at ${appointment.startTime}`,
-            clientName: appointment.clientName,
-            appointmentId: appointment.id,
+            message: `${finalAppointment.clientName} booked ${finalAppointment.serviceName} on ${finalAppointment.date} at ${finalAppointment.startTime}`,
+            clientName: finalAppointment.clientName,
+            appointmentId: finalAppointment.id,
           });
         } catch (err) {
           console.log('[useAppointmentsStore] addAppointment notify error', err);
         }
       },
-      updateAppointment: (id, updatedAppointment) => {
+      updateAppointment: async (id, updatedAppointment, autoTranslate = true) => {
+        let finalUpdate = updatedAppointment;
+        
+        if (autoTranslate) {
+          const translations: Partial<Appointment> = {};
+          
+          if (updatedAppointment.clientName && typeof updatedAppointment.clientName === 'string') {
+            translations.clientName = await translateText(updatedAppointment.clientName);
+          }
+          
+          if (updatedAppointment.serviceName && typeof updatedAppointment.serviceName === 'string') {
+            translations.serviceName = await translateText(updatedAppointment.serviceName);
+          }
+          
+          if (updatedAppointment.notes && typeof updatedAppointment.notes === 'string') {
+            translations.notes = await translateText(updatedAppointment.notes);
+          }
+          
+          finalUpdate = { ...updatedAppointment, ...translations };
+        }
         let prevAppointment: Appointment | undefined;
         let nextAppointment: Appointment | undefined;
         set((state) => {
           prevAppointment = state.appointments.find((a) => a.id === id);
           const updated = state.appointments.map((appointment) =>
-            appointment.id === id ? { ...appointment, ...updatedAppointment, updatedAt: new Date().toISOString() } : appointment
+            appointment.id === id ? { ...appointment, ...finalUpdate, updatedAt: new Date().toISOString() } : appointment
           );
           nextAppointment = updated.find((a) => a.id === id);
           return { appointments: updated };

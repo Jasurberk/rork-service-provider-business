@@ -142,6 +142,13 @@ export const translations = {
     logoutConfirmTitle: 'Log Out',
     logoutConfirmMessage: 'Are you sure you want to log out?',
     confirm: 'Confirm',
+    translating: 'Translating...',
+    translatingMessage: 'Translating all data to English, Russian, and Uzbek. This may take a few minutes...',
+    translateData: 'Translate All Data',
+    success: 'Success',
+    translationComplete: 'All data has been successfully translated!',
+    error: 'Error',
+    translationError: 'Failed to translate data. Please try again.',
   },
   ru: {
     // Navigation
@@ -286,6 +293,13 @@ export const translations = {
     logoutConfirmTitle: 'Выйти',
     logoutConfirmMessage: 'Вы уверены, что хотите выйти?',
     confirm: 'Подтвердить',
+    translating: 'Перевод...',
+    translatingMessage: 'Перевод всех данных на английский, русский и узбекский языки. Это может занять несколько минут...',
+    translateData: 'Перевести все данные',
+    success: 'Успешно',
+    translationComplete: 'Все данные успешно переведены!',
+    error: 'Ошибка',
+    translationError: 'Не удалось перевести данные. Пожалуйста, попробуйте снова.',
   },
   uz: {
     // Navigation
@@ -430,5 +444,12 @@ export const translations = {
     logoutConfirmTitle: 'Chiqish',
     logoutConfirmMessage: 'Haqiqatan ham chiqmoqchimisiz?',
     confirm: 'Tasdiqlash',
+    translating: 'Tarjima qilinmoqda...',
+    translatingMessage: 'Barcha ma\'lumotlar ingliz, rus va o\'zbek tillariga tarjima qilinmoqda. Bu bir necha daqiqa vaqt olishi mumkin...',
+    translateData: 'Barcha ma\'lumotlarni tarjima qilish',
+    success: 'Muvaffaqiyat',
+    translationComplete: 'Barcha ma\'lumotlar muvaffaqiyatli tarjima qilindi!',
+    error: 'Xato',
+    translationError: 'Ma\'lumotlarni tarjima qilishda xato. Iltimos, qayta urinib ko\'ring.',
   },
 };

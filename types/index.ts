@@ -30,17 +30,17 @@ export type Service = {
 export type Appointment = {
   id: string;
   clientId: string;
-  clientName: string;
+  clientName: string | TranslatedText;
   clientPhone?: string;
   clientEmail?: string;
   serviceId: string;
-  serviceName: string;
+  serviceName: string | TranslatedText;
   servicePrice: number;
   date: string;
   startTime: string;
   endTime: string;
   status: 'confirmed' | 'pending' | 'cancelled' | 'completed' | 'no-show';
-  notes?: string;
+  notes?: string | TranslatedText;
   createdAt: string;
   updatedAt: string;
   bookingSource: 'direct' | 'bronapp' | 'phone' | 'walk-in';

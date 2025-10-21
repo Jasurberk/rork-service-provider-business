@@ -19,7 +19,8 @@ import {
   Megaphone,
   CreditCard,
   Info,
-  User as UserIcon
+  User as UserIcon,
+  RefreshCw
 } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { router } from 'expo-router';
@@ -45,6 +46,11 @@ import { useAuth } from '@/hooks/useAuthStore';
 import { useBusinessStore } from '@/hooks/useBusinessStore';
 import { useLanguageStore } from '@/hooks/useLanguageStore';
 import { getTranslatedText } from '@/lib/translation-utils';
+import { translateMockData } from '@/lib/translate-mock-data';
+import { useServicesStore } from '@/hooks/useServicesStore';
+import { useClientsStore } from '@/hooks/useClientsStore';
+import { usePortfolioStore } from '@/hooks/usePortfolioStore';
+import { useAppointmentsStore } from '@/hooks/useAppointmentsStore';
 
 import { mockReviews } from '@/mocks/reviews';
 
@@ -68,7 +74,14 @@ export default function ProfileScreen() {
   const [showLanguageModal, setShowLanguageModal] = useState<boolean>(false);
   const [showLogoutModal, setShowLogoutModal] = useState<boolean>(false);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
+  const [isTranslating, setIsTranslating] = useState<boolean>(false);
   const scrollViewRef = React.useRef<ScrollView>(null);
+  
+  const servicesStore = useServicesStore();
+  const clientsStore = useClientsStore();
+  const portfolioStore = usePortfolioStore();
+  const appointmentsStore = useAppointmentsStore();
+  const businessStore = useBusinessStore();
 
   const daysOfWeek = [
     { key: 'monday', name: t.monday },
@@ -559,6 +572,52 @@ export default function ProfileScreen() {
     );
   };
 
+  const handleTranslateMockData = async () => {
+    try {
+      setIsTranslating(true);
+      Alert.alert(
+        t.translating || 'Translating',
+        t.translatingMessage || 'Translating all data to English, Russian, and Uzbek. This may take a few minutes...',
+        [{ text: 'OK' }]
+      );
+      
+      const translated = await translateMockData();
+      
+      for (const service of translated.services) {
+        await servicesStore.updateService(service.id, service, false);
+      }
+      
+      for (const client of translated.clients) {
+        await clientsStore.updateClient(client.id, client, false);
+      }
+      
+      for (const item of translated.portfolio) {
+        await portfolioStore.updatePortfolioItem(item.id, item, false);
+      }
+      
+      for (const appointment of translated.appointments) {
+        await appointmentsStore.updateAppointment(appointment.id, appointment, false);
+      }
+      
+      await businessStore.updateProfile(translated.profile, false);
+      
+      setIsTranslating(false);
+      Alert.alert(
+        t.success || 'Success',
+        t.translationComplete || 'All data has been successfully translated!',
+        [{ text: 'OK' }]
+      );
+    } catch (error) {
+      console.error('Translation error:', error);
+      setIsTranslating(false);
+      Alert.alert(
+        t.error || 'Error',
+        t.translationError || 'Failed to translate data. Please try again.',
+        [{ text: 'OK' }]
+      );
+    }
+  };
+
   const renderAppSettings = () => (
     <View style={styles.section}>
       <View style={styles.sectionHeader}>
@@ -581,6 +640,21 @@ export default function ProfileScreen() {
             </Text>
             <ChevronRight size={16} color={Colors.neutral.gray} />
           </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          testID="setting-translate-data"
+          style={styles.settingRow}
+          onPress={handleTranslateMockData}
+          disabled={isTranslating}
+        >
+          <View style={styles.settingLeft}>
+            <RefreshCw size={20} color={isTranslating ? Colors.neutral.gray : Colors.primary.main} />
+            <Text style={[styles.settingLabel, isTranslating && { color: Colors.neutral.gray }]}>
+              {isTranslating ? (t.translating || 'Translating...') : (t.translateData || 'Translate All Data')}
+            </Text>
+          </View>
+          {!isTranslating && <ChevronRight size={16} color={Colors.neutral.gray} />}
         </TouchableOpacity>
 
         <TouchableOpacity
