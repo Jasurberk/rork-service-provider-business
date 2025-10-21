@@ -36,6 +36,7 @@ import {
   TouchableOpacity, 
   View 
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 import Colors from '@/constants/colors';
@@ -49,6 +50,7 @@ import { mockReviews } from '@/mocks/reviews';
 const { width } = Dimensions.get('window');
 
 export default function ProfileScreen() {
+  const insets = useSafeAreaInsets();
   const { language, setLanguage } = useLanguageStore();
   const { profile } = useBusinessStore();
   const { signOut } = useAuth();
@@ -789,7 +791,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top }]}>
         {renderCoverPhotos()}
         {renderBusinessDetails()}
         {renderWorkingHours()}
