@@ -1,5 +1,5 @@
 import { ArrowUpDown, Image as ImageIcon, Plus, Search, Settings as SettingsIcon, Users } from 'lucide-react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,6 +14,7 @@ import { useClientsStore } from '@/hooks/useClientsStore';
 import { useLanguageStore } from '@/hooks/useLanguageStore';
 import { usePortfolioStore } from '@/hooks/usePortfolioStore';
 import { useServicesStore } from '@/hooks/useServicesStore';
+import { getTranslatedText } from '@/lib/translation-utils';
 import { Client, PortfolioItem, Service } from '@/types';
 
 type TabType = 'clients' | 'services' | 'portfolio';
@@ -49,12 +50,16 @@ export default function PortfolioScreen() {
     return hasLastVisit + hasUpcoming + hasNotes;
   };
 
-  const sortClients = (clientsToSort: Client[], sortType: ClientSortType) => {
+  const sortClients = useCallback((clientsToSort: Client[], sortType: ClientSortType) => {
     const sorted = [...clientsToSort];
     
     switch (sortType) {
       case 'name':
-        return sorted.sort((a, b) => a.name.localeCompare(b.name));
+        return sorted.sort((a, b) => {
+          const nameA = getTranslatedText(a.name, language);
+          const nameB = getTranslatedText(b.name, language);
+          return nameA.localeCompare(nameB);
+        });
       case 'lastVisit':
         return sorted.sort((a, b) => {
           if (!a.lastVisit && !b.lastVisit) return 0;
@@ -67,7 +72,7 @@ export default function PortfolioScreen() {
       default:
         return sorted;
     }
-  };
+  }, [language]);
 
   useEffect(() => {
     // Filter clients
@@ -76,17 +81,21 @@ export default function PortfolioScreen() {
     if (searchQuery.trim() !== '') {
       const query = searchQuery.toLowerCase();
       filtered = clients.filter(
-        (client) =>
-          client.name.toLowerCase().includes(query) ||
-          client.email.toLowerCase().includes(query) ||
-          client.phone.includes(query)
+        (client) => {
+          const clientName = getTranslatedText(client.name, language).toLowerCase();
+          return (
+            clientName.includes(query) ||
+            client.email.toLowerCase().includes(query) ||
+            client.phone.includes(query)
+          );
+        }
       );
     }
     
     // Sort clients
     const sorted = sortClients(filtered, clientSortType);
     setFilteredClients(sorted);
-  }, [searchQuery, clients, clientSortType]);
+  }, [searchQuery, clients, clientSortType, language, sortClients]);
 
   useEffect(() => {
     // Filter services
@@ -99,14 +108,16 @@ export default function PortfolioScreen() {
     if (searchQuery.trim() !== '') {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
-        (service) =>
-          service.name.toLowerCase().includes(query) ||
-          service.description.toLowerCase().includes(query)
+        (service) => {
+          const serviceName = getTranslatedText(service.name, language).toLowerCase();
+          const serviceDesc = getTranslatedText(service.description, language).toLowerCase();
+          return serviceName.includes(query) || serviceDesc.includes(query);
+        }
       );
     }
     
     setFilteredServices(filtered);
-  }, [searchQuery, selectedCategory, services]);
+  }, [searchQuery, selectedCategory, services, language]);
 
   useEffect(() => {
     // Filter portfolio
@@ -119,12 +130,15 @@ export default function PortfolioScreen() {
     if (searchQuery.trim() !== '') {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
-        (item) => item.description.toLowerCase().includes(query)
+        (item) => {
+          const itemDesc = getTranslatedText(item.description, language).toLowerCase();
+          return itemDesc.includes(query);
+        }
       );
     }
     
     setFilteredPortfolio(filtered);
-  }, [searchQuery, selectedCategory, portfolioItems]);
+  }, [searchQuery, selectedCategory, portfolioItems, language]);
 
   const handleClientPress = (client: Client) => {
     router.push(`/client/${client.id}`);
