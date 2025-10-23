@@ -2,8 +2,18 @@ import { BusinessProfile } from '@/types';
 
 export const mockProfile: BusinessProfile = {
   id: 'business-1',
-  name: 'Elite Barber Shop',
-  address: '123 Main Street, Anytown, USA',
+  name: {
+    en: 'Elite Barber Shop',
+    ru: 'Элитная Барбершоп',
+    uz: 'Elit Barbershop',
+    original: 'en'
+  },
+  address: {
+    en: '123 Main Street, Anytown, USA',
+    ru: '123 Главная улица, Энитаун, США',
+    uz: '123 Asosiy ko\'cha, Enitaun, AQSh',
+    original: 'en'
+  },
   phone: '(555) 123-4567',
   email: 'contact@elitebarbershop.com',
   workingHours: {
@@ -43,7 +53,12 @@ export const mockProfile: BusinessProfile = {
       closeTime: '',
     },
   },
-  bio: 'Elite Barber Shop has been providing premium grooming services since 2010. Our team of skilled barbers specializes in classic and modern styles, beard grooming, and premium shaving services.',
+  bio: {
+    en: 'Elite Barber Shop has been providing premium grooming services since 2010. Our team of skilled barbers specializes in classic and modern styles, beard grooming, and premium shaving services.',
+    ru: 'Elite Barber Shop предоставляет премиальные услуги по уходу с 2010 года. Наша команда опытных барберов специализируется на классических и современных стилях, уходе за бородой и премиальных услугах бритья.',
+    uz: 'Elite Barber Shop 2010 yildan beri yuqori sifatli parvarish xizmatlarini taqdim etmoqda. Bizning tajribali sartaroshlar jamoamiz klassik va zamonaviy uslublar, soqol parvarishi va yuqori sifatli soqol olish xizmatlarida ixtisoslashgan.',
+    original: 'en'
+  },
   profileImage: 'https://images.unsplash.com/photo-1512690459411-b9245aed614b',
   coverPhotos: [
     'https://images.unsplash.com/photo-1512690459411-b9245aed614b?w=800&h=400&fit=crop',
