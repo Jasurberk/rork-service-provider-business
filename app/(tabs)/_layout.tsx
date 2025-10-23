@@ -2,6 +2,7 @@ import { Tabs, router } from "expo-router";
 import { Bell, Calendar, Home, Image, User } from "lucide-react-native";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { translations } from "@/constants/translations";
 import { useLanguageStore } from "@/hooks/useLanguageStore";
@@ -12,6 +13,7 @@ export default function TabLayout() {
   const { language } = useLanguageStore();
   const t = translations[language];
   const unreadCount = useNotificationsStore((s: { unreadCount: number }) => s.unreadCount);
+  const insets = useSafeAreaInsets();
 
   return (
     <Tabs
@@ -20,6 +22,8 @@ export default function TabLayout() {
         tabBarInactiveTintColor: Colors.neutral.gray,
         tabBarStyle: {
           borderTopColor: Colors.neutral.lightGray,
+          paddingBottom: insets.bottom,
+          height: 60 + insets.bottom,
         },
         headerStyle: {
           backgroundColor: Colors.primary.main,
